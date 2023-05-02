@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<%- include("partials/header2"); -%>
+<html lang="en">
+<h1>Welcome Admin</h1>
+<hr>
+<a class="btn btn-dark btn-lg" href="/adminmainpg" role="button">Main Page</a>
+<!-- <a class="btn btn-dark btn-lg" href="/secrets" role="button">Main Page</a> -->
+<br>
+<br>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+  <style>
+    .form-group input {
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 14px;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .form-group input:focus {
+      border-color: #a1cbef;
+      box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+    }
+    .input-icon {
+      position: absolute;
+      right: 10px;
+      top: calc(50% - 0.5em);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form action="/adminpost" method="POST">
+      <div class="form-group">
+        <input type="text" class="form-control" name="brand" placeholder="Brand Name">
+        <input type="text" class="form-control" name="year" placeholder="Year">
+        <input type="text" class="form-control" name="version" placeholder="Car's Version">
+        <input type="number" class="form-control" name="price" placeholder="Car's Selling Price">
+        <input type="number" class="form-control" name="mile" placeholder="Car's Mile">
+        <input type="hidden" name="GPS" value="false">
+        <!-- <input type="checkbox" class="form-control" name="GPS_check" value="true"> Car's GPS -->
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" name="GPS_check" value="true" id="gpsCheckbox"> Car's GPS
+        </div>
+        <input type="number" class="form-control" name="seats" placeholder="Number of Seats">
+        <input type="text" class="form-control" name="imgurl" placeholder="Image's URL">
+      </div>
+      <button type="submit" class="btn btn-dark">Add</button>
+    </form>
+
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
