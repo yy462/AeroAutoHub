@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #chatContainer {
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            position: fixed;
+            right: 80px;
+            bottom: 10px;
+            border-radius: 10px;
+        }
+
+        #chatHeader {
+            padding: 10px;
+            background-color: #9b9c98db;
+            color: #f0f0f0;
+            cursor: pointer;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        #chatArea {
+            display: none;
+            height: 300px;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+
+        #chatForm {
+            display: none;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        #userInput {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        #chatForm button {
+            padding: 5px;
+            background-color: #9b9c98db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        #chatForm button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <br>
+    <br>
+    <div id="chatContainer" class="card-body">
+        <div id="chatHeader">Chat</div>
+        <div id="chatArea"></div>
+        <form id="chatForm">
+            <input type="text" id="userInput" placeholder="Type your message">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/client.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatHeader = document.getElementById('chatHeader');
+            const chatArea = document.getElementById('chatArea');
+            const chatForm = document.getElementById('chatForm');
+
+            chatHeader.addEventListener('click', () => {
+                chatArea.style.display = chatArea.style.display === 'block' ? 'none' : 'block';
+                chatForm.style.display = chatForm.style.display === 'block' ? 'none' : 'block';
+            });
+        });
+    </script>
+</body>
+</html>

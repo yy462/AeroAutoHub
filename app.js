@@ -10,6 +10,8 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
+// const openai = require('openai-node')
+const axios = require("axios");
 
 const homeStartingContent = "A user-friendly platform for buying and selling pre-owned vehicles, connecting customers with a diverse range of quality second-hand cars from AeroAuto.Join AeroAuto today and let us be your trusted partner in finding the perfect pre-owned vehicle. We lookforward to serving you!";
 const mongoose = require("mongoose");
@@ -24,7 +26,7 @@ const app = express();
 console.log(process.env.API_KEY);
 
 app.set('view engine', 'ejs');
-
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public/static"));
 
@@ -37,6 +39,9 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+// openai.api_key = process.env.OPENAI_KEY;
 
 // define the data struct
 const carSchema = {
@@ -508,6 +513,36 @@ app.post("/submit", function(req, res) {
     }
   })
 });
+
+
+app.get('/chat', (req, res) => {
+  res.render('chat'); // Render the 'client.ejs' view when accessing the root path
+});
+
+app.post("/chat", async (req, res) => {
+  const input = req.body.messages;
+  console.log("input test received: ", req.body)
+  const test = [
+    {
+      role: "user",
+      content: input,
+    },  
+  ];
+  // const test = [
+  //   {
+  //     role: "user",
+  //     content: "美国的劳动节为什么不是五一",
+  //   },  
+  // ];
+  try {
+    const response = await axios.post("http://127.0.0.1:5000/chat", { messages: test });
+    res.json({ response: response.data.response });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+});
+
 
 //TODO : add the icon to show that the add is successful
 
