@@ -1,14 +1,14 @@
 import os
 import openai
 import requests
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
-
-OPENAI_API_KEY = "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"
+load_dotenv()
 # OPENAI_API_URL = "https://api.openai.com/v1/engines/davinci/completions"
 OPENAI_API_URL="https://api.openai.com/v1/chat/completions"
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_KEY")
 
 
 
