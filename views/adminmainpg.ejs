@@ -17,46 +17,14 @@
     <div class="album py-5 bg-body-tertiary">
       <div calss="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-          <% cars.forEach(function(car){ %>
-            <div class="col">
-              <div class="card shadow">
-                <div class="card-img-container" style="height: 225px; overflow: hidden; position: relative;">
-                  <img 
-                    id="car_img" 
-                    src="<%= car.imgurl %>" 
-                    alt="Car image" 
-                    style="width: 100%; height: auto; min-height: 100%; position: absolute; top: 50%; transform: translateY(-50%);" 
-                  />
-                </div>
-
-                <div class="card-body">
-                  <h2><%=car.brand + " " + car.version + " " + car.year%></h2>
-                  <p class="card-text">
-                    <%="price:" + String(car.price)%>
-                    <br/>
-                    <%="Miles: " + String(car.mile)%>
-                    <br/>
-                    <%="GPS: " + (car.GPS? "Yes":"no")%>
-                    <br/>
-                    <%="Seats: " + car.seats%>
-                  </p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='/cars/admin/<%=car._id%>'">View</button>
-                    <form action="/admindelete" method="POST">
-                      <input type="hidden" name="carId" value="<%=car._id%>">
-                      <button type="submit" class="btn btn-dark">Delete</button>
-                    </form>
-                  </div>
-                </div>
-
-              </div>
-              
-            </div>
-
-          <% }) %>
           
         </div>
       </div>
     </div>
-
+    <script>
+      let initialCars = <%- JSON.stringify(cars) %>;
+      // console.log("innitial user is ", initialUser);
+      // console.log("initial cars are: ", initialCars);
+    </script>
+    <script src="/scrollAdm.js"></script>
 <%- include('chat') %>

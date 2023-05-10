@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head data-bs-theme="dark">
   <script src="/docs/5.3/assets/js/color-modes.js"></script>
 
@@ -12,7 +13,6 @@
 
   <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/album/"> -->
 
-  <link rel="stylesheet" href="/public/static/styles.css" />
 
 
 
@@ -28,8 +28,8 @@
   <!-- <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon.ico"> -->
   <link rel="icon" href="/public/static/favicon.ico">
   <meta name="theme-color" content="#712cf9">
-
-  <link rel="canonical" href="/public/static/styles.css">
+  <link rel="stylesheet" href="/public/static/styles.css" />
+  <!-- <link rel="canonical" href="/public/static/styles.css"> -->
 </head>
 
  
@@ -142,8 +142,14 @@
             <strong>AeroAuto</strong>
 
           </a>
+  
+            <form action="/search" method="GET" style="display: flex; justify-content: center; gap: 10px;">
+              <input type="text" name="keyword" placeholder="Search cars..." style="width: 200px; padding: 5px;">
+              <button type="submit" style="padding: 5px 10px;border-radius: 10px;">Search</button>
+            </form>
+            
           
-          
+
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
             aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

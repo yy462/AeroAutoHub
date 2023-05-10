@@ -153,9 +153,8 @@ function ensureAdmin(req, res, next) {
 let cars = [];
 
 
-
 app.get("/", function(req, res){
-  Car.find({}).then(function(cars) {
+  Car.find({}).limit(12).then(function(cars) {
     res.render("home", {
       startingContent: homeStartingContent,
       cars: cars
@@ -166,13 +165,26 @@ app.get("/", function(req, res){
     }
   });
 });
+// app.get("/", function(req, res){
+//   Car.find({}).then(function(cars) {
+//     // console.log(cars);
+//     res.render("home", {
+//       startingContent: homeStartingContent,
+//       cars: cars
+//     });
+//   }).catch(function(err) {
+//     if (err) {
+//       console.log(err);
+//     }
+//   });
+// });
 
 app.get("/adminDashboard", ensureAdmin, function(req, res) {
   res.render("adminDashboard");
 });
 
 app.get("/adminmainpg", ensureAdmin, function(req, res) {
-  Car.find({}).then(function(cars) {
+  Car.find({}).limit(12).then(function(cars) {
     res.render("adminmainpg", {
       cars: cars
     });
@@ -210,7 +222,7 @@ app.get("/secrets/:postId", ensureAuthenticated,function(req, res){
   User.findOne({_id: requestedId})
   .then(function(user) {
 
-    Car.find({}).then(function(cars) {
+    Car.find({}).limit(12).then(function(cars) {
       res.render("secrets", {
         title: user.username,
         startingContent: homeStartingContent,
@@ -344,9 +356,30 @@ app.get("/collections/:postId", function(req, res) {
   });
 });
 
-// app.get("/delete", function(req, res) {
-//   console.log("try to delete: ", req.body.carId)
-// })
+app.get('/getMoreCars', async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = 12;
+  const skip = (page - 0) * pageSize;
+  console.log("get more cars is running");
+  try {
+    const cars = await Car.find().skip(skip).limit(pageSize);
+    res.json(cars);
+  } catch (error) {
+    res.status(500).json({message: 'Server error'});
+  }
+
+});
+
+
+app.get('/search', async(req, res) => {
+  const keyword = req.query.keyword;
+  // const requestedId = req.params.postId;
+  const cars = await Car.find({brand: new RegExp(keyword, 'i')});
+  res.render('searchRes', {
+    cars: cars
+  });
+  // console.log("found cars are: ", cars);
+});
 
 app.post("/register", function(req, res) {
   User.register({username: req.body.username}, req.body.password, function(err, user) {

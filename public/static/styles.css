@@ -79,3 +79,20 @@
     color:black;
 	background-color: #E8ECEF;
 }
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .search-input {
+    width: 200px;
+    padding: 5px;
+  }
+  
+  .search-button {
+    padding: 5px 10px;
+    background-color: #9b9c98db;
+    border-radius: 10px;
+  }
