@@ -33,7 +33,7 @@ function createCarCard(car) {
                 ${"Seats: " + car.seats}
             </p>
             <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='/cars/admin/${car._id}'">View</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary border-2" onclick="location.href='/cars/admin/${car._id}'">View</button>
                 <form action="/admindelete" method="POST">
                     <input type="hidden" name="carId" value="${car._id}">
                     <button type="submit" class="btn btn-dark">Delete</button>
