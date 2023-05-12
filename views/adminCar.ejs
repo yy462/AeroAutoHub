@@ -1,18 +1,21 @@
 <%- include("partials/header2"); -%>
-<h2>Welcome admin</h2>
-<hr>  
-<a class="btn btn-dark btn-lg" href="/adminmainpg" role="button">Main Page</a>
-<br>
-<br>
-<img 
-src="<%= img %>" 
-style="width: 50%; height: auto; min-height: 10%; position: relative; top: 50%;" 
-/>
-<h1><%=title%></h1>
-<p><%=content%></p>
+  <h2>Welcome Admin</h2>
+  <hr>
+  <a class="btn btn-dark btn-lg" href="/adminmainpg" role="button">Main Page</a>
+  <br>
+  <br>
+  <img src="<%= img %>" style="width: 50%; height: auto; min-height: 10%; position: relative; top: 50%;" />
+  <h2
+    style="font-family: CarMaxSharpSansDisp-Bold, Frutiger, 'Frutiger Linotype', Univers, Calibri, 'Gill Sans', 'Gill Sans MT', 'Myriad Pro', Myriad, 'DejaVu Sans Condensed', 'Liberation Sans', 'Nimbus Sans L', Tahoma, Geneva, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-style: normal; font-weight: 700; font-size: 2.5rem; line-height: 1.5; letter-spacing: .62px; color: #053361; margin: 0.375rem 0;">
+    <%=title%>
+  </h2>
+
+  <p
+    style="display: flex; flex-wrap: wrap; word-break: break-word; margin: 0 0 0.375rem; font-family: CarMaxSharpSansDisp-Bold,Frutiger,'Frutiger Linotype',Univers,Calibri,'Gill Sans','Gill Sans MT','Myriad Pro',Myriad,'DejaVu Sans Condensed','Liberation Sans','Nimbus Sans L',Tahoma,Geneva,'Helvetica Neue',Helvetica,Arial,sans-serif; font-style: normal; font-weight: 700; font-size: 1.5rem; line-height: 1.5; letter-spacing: .38px; color: #2a343d;">
+    <%=content%>
+  </p>
 
   <!-- <form action="/delete" method="POST">
     <button type="submit" class="btn btn-dark">Delete</button>
   </form> -->
-<%- include('chat') %>
-
+  <%- include('chat') %>
