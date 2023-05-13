@@ -36,11 +36,11 @@ function createCarCard(car) {
             <h2 style="font-family: CarMaxSharpSansDisp-Bold, Frutiger, 'Frutiger Linotype', Univers, Calibri, 'Gill Sans', 'Gill Sans MT', 'Myriad Pro', Myriad, 'DejaVu Sans Condensed', 'Liberation Sans', 'Nimbus Sans L', Tahoma, Geneva, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-style: normal; font-weight: 700; font-size: 1.5rem; line-height: 1.5; letter-spacing: .62px; color: #053361; margin: 0.375rem 0;">
                 ${car.brand + " " + car.version + " " + car.year}
             </h2>
-            <p class="card-text" style="display: flex; flex-wrap: wrap; word-break: break-word; margin: 0 0 0.375rem; font-family: CarMaxSharpSansDisp-Bold, Frutiger, 'Frutiger Linotype', Univers, Calibri, 'Gill Sans', 'Gill Sans MT', 'Myriad Pro', Myriad, 'DejaVu Sans Condensed', 'Liberation Sans', 'Nimbus Sans L', Tahoma, Geneva, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-style: normal; font-weight: 700; font-size: 1.5rem; line-height: 1.5; letter-spacing: .38px; color: #2a343d;">
+            <p class="card-text" style="display: flex; flex-wrap: wrap; word-break: break-word; margin: 0 0 0.375rem; font-family: CarMaxSharpSansDisp-Bold, Frutiger, 'Frutiger Linotype', Univers, Calibri, 'Gill Sans', 'Gill Sans MT', 'Myriad Pro', Myriad, 'DejaVu Sans Condensed', 'Liberation Sans', 'Nimbus Sans L', Tahoma, Geneva, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-style: normal; font-weight: 700; font-size: 1.0rem; line-height: 1.5; letter-spacing: .38px; color: #2a343d;">
                 
                 ${"Price: " + "$" + Math.floor(car.price * 10000 / 6.9).toLocaleString()}
                 <br/>
-                ${"Miles: " + String(car.mile.toLocaleString()) + " mi"}
+                ${"Miles: " + String(car.mile.toLocaleString()) * 10 + "K mi"}
                 <br/>
                 ${"GPS: " + (car.GPS ? "Yes" : "no")}
                 <br/>

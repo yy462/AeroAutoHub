@@ -250,8 +250,11 @@ app.get("/cars/:postId", function (req, res) {
   Car.findOne({ _id: requestedId }).then(function (car) {
     res.render("car", {
       title: (car.brand + " " + car.version + " " + car.year), //
-      content: ("price:" + car.price),
-      img: car.imgurl //
+      content: ("price: " + "$" + Math.floor(car.price * 10000 / 6.9).toLocaleString()),
+      img: car.imgurl,
+      mile: ("Miles: ") + car.mile.toLocaleString() * 10 + "K mi",
+      GPS: "GPS: " + (car.GPS ? "Yes" : "no"),
+      seats: ("Seats: ") + car.seats//
     });
     // res.redirect("/posts/" + requestedTitle);
   }).catch(function (err) {
