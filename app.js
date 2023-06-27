@@ -18,7 +18,7 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 const url = "mongodb+srv://" + process.env.USER_NAME + ":" + process.env.USER_PASS + "@cluster0.ruqhhsi.mongodb.net/carDB";
 // mongoose.connect("mongodb://127.0.0.1:27017/carDB", {useNewUrlParser: true})//local data connect
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 
@@ -27,7 +27,7 @@ console.log(process.env.API_KEY);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public/static"));
 
 // initialize the session
@@ -64,7 +64,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   googleId: String,
   secret: [
-    {type: String}
+    { type: String }
   ],
   role: String
 });
@@ -92,7 +92,7 @@ passport.use(User.createStrategy());
 //     });
 //   });
 // });
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
@@ -101,14 +101,14 @@ passport.serializeUser(function(user, done) {
 //     return done(null, id);
 //   });
 // })
-passport.deserializeUser(function(id, done) {
+passport.deserializeUser(function (id, done) {
   User.findById(id)
-  .then(function(user) {
-    done(null, user);
-  })
-  .catch(function(err) {
-    done(err);
-  });
+    .then(function (user) {
+      done(null, user);
+    })
+    .catch(function (err) {
+      done(err);
+    });
 });
 
 // identity regist using google
@@ -118,23 +118,23 @@ passport.use(new GoogleStrategy({
   callbackURL: "http://localhost:3000/auth/google/secrets",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 },
-function(accessToken, refreshToken, profile, done) {
-  console.log(profile);
-  User.findOne({'googleId': profile.id})
-  .then(user => {
-      if (!user) {
+  function (accessToken, refreshToken, profile, done) {
+    console.log(profile);
+    User.findOne({ 'googleId': profile.id })
+      .then(user => {
+        if (!user) {
           user = new User({
-              googleId: profile.id
-        });
-        user.save()
+            googleId: profile.id
+          });
+          user.save()
             .then(() => done(null, user))
             .catch(err => done(err));
-      } else {
-        done(null, user);
-      }
-  })
-  .catch(err => done(err));
-}
+        } else {
+          done(null, user);
+        }
+      })
+      .catch(err => done(err));
+  }
 ));
 
 function ensureAuthenticated(req, res, next) {
@@ -157,13 +157,13 @@ function ensureAdmin(req, res, next) {
 let cars = [];
 
 
-app.get("/", function(req, res){
-  Car.find({}).limit(12).then(function(cars) {
+app.get("/", function (req, res) {
+  Car.find({}).limit(12).then(function (cars) {
     res.render("home", {
       startingContent: homeStartingContent,
       cars: cars
     });
-  }).catch(function(err) {
+  }).catch(function (err) {
     if (err) {
       console.log(err);
     }
@@ -183,72 +183,72 @@ app.get("/", function(req, res){
 //   });
 // });
 
-app.get("/adminDashboard", ensureAdmin, function(req, res) {
+app.get("/adminDashboard", ensureAdmin, function (req, res) {
   res.render("adminDashboard");
 });
 
-app.get("/adminmainpg", ensureAdmin, function(req, res) {
-  Car.find({}).limit(12).then(function(cars) {
+app.get("/adminmainpg", ensureAdmin, function (req, res) {
+  Car.find({}).limit(12).then(function (cars) {
     res.render("adminmainpg", {
       cars: cars
     });
-  }).catch(function(err) {
+  }).catch(function (err) {
     if (err) {
       console.log(err);
     }
   });
 });
 
-app.get("/login", function(req, res) {
+app.get("/login", function (req, res) {
   res.render("login");
 });
 
-app.get("/register", function(req, res) {
+app.get("/register", function (req, res) {
   res.render("register");
 });
 
-app.get("/secrets", function(req, res) {
-  User.find({"secret": {$ne: null}}).then(function(foundUsers) {
+app.get("/secrets", function (req, res) {
+  User.find({ "secret": { $ne: null } }).then(function (foundUsers) {
     if (foundUsers) {
-      res.render("secrets", {usersWithSecrets: foundUsers})
+      res.render("secrets", { usersWithSecrets: foundUsers })
     }
   })
-  .catch(function(err) {
-    if (err) {
-      console.log(err);
-    }
-  });
-});
-
-app.get("/secrets/:postId", ensureAuthenticated,function(req, res){
-  const requestedId = req.params.postId;
-
-  User.findOne({_id: requestedId})
-  .then(function(user) {
-
-    Car.find({}).limit(12).then(function(cars) {
-      res.render("secrets", {
-        title: user.username,
-        startingContent: homeStartingContent,
-        cars: cars,
-        user: user
-      });
-    }).catch(function(err) {
+    .catch(function (err) {
       if (err) {
         console.log(err);
       }
     });
-  })
-  .catch(function(err) {
-    if (err) {
-      console.log(err);
-    }
-  })
+});
+
+app.get("/secrets/:postId", ensureAuthenticated, function (req, res) {
+  const requestedId = req.params.postId;
+
+  User.findOne({ _id: requestedId })
+    .then(function (user) {
+
+      Car.find({}).limit(12).then(function (cars) {
+        res.render("secrets", {
+          title: user.username,
+          startingContent: homeStartingContent,
+          cars: cars,
+          user: user
+        });
+      }).catch(function (err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    })
+    .catch(function (err) {
+      if (err) {
+        console.log(err);
+      }
+    })
 
 });
 
 // general user's car viewing page
-app.get("/cars/:postId", function(req, res){
+app.get("/cars/:postId", function (req, res) {
   const requestedId = req.params.postId;
 
   Car.findOne({_id: requestedId}).then(function(car) {
@@ -272,7 +272,7 @@ app.get("/cars/:postId", function(req, res){
 });
 
 
-app.get("/cars/admin/:postId", function(req, res){
+app.get("/cars/admin/:postId", function (req, res) {
   const requestedId = req.params.postId;
 
   Car.findOne({_id: requestedId}).then(function(car) {
@@ -297,7 +297,7 @@ app.get("/cars/admin/:postId", function(req, res){
 });
 
 // Specific user's car viewing page
-app.get("/cars/:userId/:postId", function(req, res){
+app.get("/cars/:userId/:postId", function (req, res) {
   const requestedCarId = req.params.postId;
   const requestedUserId = req.params.userId;
   User.findOne({_id: requestedUserId})
@@ -335,8 +335,8 @@ app.get("/cars/:userId/:postId", function(req, res){
 
 
 
-app.get("/logout", function(req, res) {
-  req.logout(function(err) {
+app.get("/logout", function (req, res) {
+  req.logout(function (err) {
     if (err) {
       console.log(err);
     } else {
@@ -346,35 +346,35 @@ app.get("/logout", function(req, res) {
   res.redirect("/");
 });
 
-app.get("/collections/:postId", function(req, res) {
+app.get("/collections/:postId", function (req, res) {
   const requestedId = req.params.postId;
-  User.findOne({_id: requestedId})
-  .then(function(user) {
-    if (user) {
-      Car.find({_id: {$in: user.secret}})
-      .then(function(cars) {
-        res.render("collections", {
-          carList: cars,
-          title: user.username,
-          mainpgId: requestedId,
-          user: user
-        });
-      })
-      .catch(function(err) {
-        console.log("error finding the cars", err);
-        res.status(500).send("Error finding cars");
-      });
-    } else {
-      console.log("User not found");
-      res.status(404).send("User not found");
-    }
-  })
-  .catch(function(err) {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Error finding user");
-    }
-  });
+  User.findOne({ _id: requestedId })
+    .then(function (user) {
+      if (user) {
+        Car.find({ _id: { $in: user.secret } })
+          .then(function (cars) {
+            res.render("collections", {
+              carList: cars,
+              title: user.username,
+              mainpgId: requestedId,
+              user: user
+            });
+          })
+          .catch(function (err) {
+            console.log("error finding the cars", err);
+            res.status(500).send("Error finding cars");
+          });
+      } else {
+        console.log("User not found");
+        res.status(404).send("User not found");
+      }
+    })
+    .catch(function (err) {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error finding user");
+      }
+    });
 });
 
 app.get('/getMoreCars', async (req, res) => {
@@ -386,29 +386,29 @@ app.get('/getMoreCars', async (req, res) => {
     const cars = await Car.find().skip(skip).limit(pageSize);
     res.json(cars);
   } catch (error) {
-    res.status(500).json({message: 'Server error'});
+    res.status(500).json({ message: 'Server error' });
   }
 
 });
 
 
-app.get('/search', async(req, res) => {
+app.get('/search', async (req, res) => {
   const keyword = req.query.keyword;
   // const requestedId = req.params.postId;
-  const cars = await Car.find({brand: new RegExp(keyword, 'i')});
+  const cars = await Car.find({ brand: new RegExp(keyword, 'i') });
   res.render('searchRes', {
     cars: cars
   });
   // console.log("found cars are: ", cars);
 });
 
-app.post("/register", function(req, res) {
-  User.register({username: req.body.username}, req.body.password, function(err, user) {
+app.post("/register", function (req, res) {
+  User.register({ username: req.body.username }, req.body.password, function (err, user) {
     if (err) {
       console.log(err);
       res.redirect("/register");
     } else {
-      passport.authenticate("local")(req, res, function() {
+      passport.authenticate("local")(req, res, function () {
         res.redirect("/login");
       })
     }
@@ -423,18 +423,18 @@ app.post("/register", function(req, res) {
 //   res.redirect("/secrets/" + req.user._id);
 // });
 
-app.post("/login", function(req, res) {
+app.post("/login", function (req, res) {
   const user = new User({
     username: req.body.username,
     password: req.body.password
   });
 
-  req.login(user, function(err) {
+  req.login(user, function (err) {
     if (err) {
       console.log(err);
     } else {
-      passport.authenticate("local")(req, res, function() {
-        if(req.user.role === "admin") {
+      passport.authenticate("local")(req, res, function () {
+        if (req.user.role === "admin") {
           res.redirect("/adminmainpg");
         } else {
           res.redirect("/secrets/" + req.user._id);
@@ -445,68 +445,68 @@ app.post("/login", function(req, res) {
 })
 
 
-app.post("/logout", function(req, res) {
+app.post("/logout", function (req, res) {
   req.logout();
   res.redirect("/");
 });
 
 
-app.post("/delete", function(req, res) {
+app.post("/delete", function (req, res) {
   // console.log("try to delete: ", req.body.carId)
   const carToDel = req.body.carId;
   const userId = req.body.userId;
-  User.findOne({_id: userId})
-  .then(function(foundUser) {
-    if (foundUser) {
-      const carIndex = foundUser.secret.indexOf(carToDel);
+  User.findOne({ _id: userId })
+    .then(function (foundUser) {
+      if (foundUser) {
+        const carIndex = foundUser.secret.indexOf(carToDel);
 
-      if (carIndex != -1) {
-        foundUser.secret.splice(carIndex, 1);
-        foundUser.save()
-        .then(function() {
-          console.log("Car removed from the List");
+        if (carIndex != -1) {
+          foundUser.secret.splice(carIndex, 1);
+          foundUser.save()
+            .then(function () {
+              console.log("Car removed from the List");
+              res.redirect("/collections/" + userId);
+            })
+            .catch(function (err) {
+              console.log("Error saving user after removing car:", err);
+              res.status(500).send("Error saving user after removing car");
+            });
+        } else {
+          console.log("submittedCar is not included in the targeted list");
           res.redirect("/collections/" + userId);
-        })
-        .catch(function(err) {
-          console.log("Error saving user after removing car:", err);
-          res.status(500).send("Error saving user after removing car");
-        });
+        }
       } else {
-        console.log("submittedCar is not included in the targeted list");
+        console.log("This user is not existed");
         res.redirect("/collections/" + userId);
       }
-    } else {
-      console.log("This user is not existed");
-      res.redirect("/collections/" + userId);
-    }
-  })
-  .catch(function(err) {
-    if (err) {
-      console.log(err);
-    }
-  });
+    })
+    .catch(function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
 });
 
 
-app.post("/admindelete", function(req, res) {
+app.post("/admindelete", function (req, res) {
   // console.log("try to delete: ", req.body.carId)
   const carToDel = req.body.carId;
   Car.findByIdAndDelete(carToDel)
-  .then(function() {
+    .then(function () {
       console.log("Car deleted successfully!");
       res.redirect("/adminmainpg");
-  })
-  .catch(function(err) {
-    if (err) {
-      console.log("Error deleting the car", err);
-      res.status(500).send("Error deleting the car");
-    }
-  });
+    })
+    .catch(function (err) {
+      if (err) {
+        console.log("Error deleting the car", err);
+        res.status(500).send("Error deleting the car");
+      }
+    });
 });
 
 
 
-app.post("/adminpost", function(req, res) {
+app.post("/adminpost", function (req, res) {
   if (req.body.GPS_check === 'true') {
     req.body.GPS = 'true';
   }
@@ -522,50 +522,50 @@ app.post("/adminpost", function(req, res) {
   });
 
   newcar.save()
-  .then(function() {
-    console.log("Car is saved");
-    res.redirect("/adminDashboard");
-  })
-  .catch(function(err) {
-    console.log("Error saving user after removing car:", err);
-    res.status(500).send("Error adding the new car");
-  });
+    .then(function () {
+      console.log("Car is saved");
+      res.redirect("/adminDashboard");
+    })
+    .catch(function (err) {
+      console.log("Error saving user after removing car:", err);
+      res.status(500).send("Error adding the new car");
+    });
 })
 
-app.post("/submit", function(req, res) {
+app.post("/submit", function (req, res) {
   const submittedCar = req.body.carId;
   const userId = req.body.userId;
   // console.log(submittedCar);
   // console.log(req.body.userId);
-  User.findOne({_id: userId})
-  .then(function(founduser) {
-    if (founduser) {
-      if (!founduser.secret.includes(submittedCar)) {
-        founduser.secret.push(submittedCar);
-        console.log("push succeed, the secret now is: ", founduser.secret);
-        founduser.save().then(function() {
+  User.findOne({ _id: userId })
+    .then(function (founduser) {
+      if (founduser) {
+        if (!founduser.secret.includes(submittedCar)) {
+          founduser.secret.push(submittedCar);
+          console.log("push succeed, the secret now is: ", founduser.secret);
+          founduser.save().then(function () {
+            res.redirect("/cars/" + userId + "/" + submittedCar);
+            //if succeed, go back to the specific user's view page
+          })
+            .catch(function (err) {
+              if (err) {
+                console.log(err);
+              }
+            });
+
+        } else {
+          console.log("submittedCar already exists in founduser.secret");
           res.redirect("/cars/" + userId + "/" + submittedCar);
-          //if succeed, go back to the specific user's view page
-        })
-        .catch(function(err) {
-          if (err) {
-            console.log(err);
-          }
-        });
-    
+        }
       } else {
-        console.log("submittedCar already exists in founduser.secret");
-        res.redirect("/cars/" + userId + "/" + submittedCar);
+        console.log("error");
       }
-    } else {
-      console.log("error");
-    }
-  })
-  .catch(function(err) {
-    if (err) {
-      console.log(err);
-    }
-  })
+    })
+    .catch(function (err) {
+      if (err) {
+        console.log(err);
+      }
+    })
 });
 
 
@@ -580,7 +580,7 @@ app.post("/chat", async (req, res) => {
     {
       role: "user",
       content: input,
-    },  
+    },
   ];
   // const test = [
   //   {
@@ -607,6 +607,6 @@ if (port == null || port == "") {
 
 app.listen(port, () => {
   console.log("Server started successfully");
-}); 
+});
 
 
