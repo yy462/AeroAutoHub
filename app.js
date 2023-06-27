@@ -52,7 +52,11 @@ const carSchema = {
   mile: Number,
   GPS: Boolean,
   seats: Number,
-  imgurl: String
+  imgurl: String,
+  images: Array,
+  output: Number,
+  Turbo: Boolean,
+  polling: String,
 }
 
 const userSchema = new mongoose.Schema({
@@ -248,10 +252,16 @@ app.get("/cars/:postId", function(req, res){
   const requestedId = req.params.postId;
 
   Car.findOne({_id: requestedId}).then(function(car) {
+      const imagearr = car.images[0].slice(1,-1).split(",")
+      const tbOutput = car.Turbo ? car.output + "T" : car.output
       res.render("car", {
-        title: (car.brand + " " + car.version + " " + car.year), //
-        content: ("price:" + car.price),
-        img: car.imgurl //
+        title: (car.brand + " " + car.version + " " + car.year),
+        content: ("Price:" + car.price + "k $"),
+        img: car.imgurl,
+        images: imagearr,
+        seats: ("Seats: " + car.seats),
+        output: ("Output is: " + tbOutput),
+        polling: ("Polling Radar: " + car.polling),
       });
       // res.redirect("/posts/" + requestedTitle);
   }).catch(function(err) {
@@ -259,7 +269,6 @@ app.get("/cars/:postId", function(req, res){
       console.log(err);
     }
   })
-
 });
 
 
@@ -267,10 +276,16 @@ app.get("/cars/admin/:postId", function(req, res){
   const requestedId = req.params.postId;
 
   Car.findOne({_id: requestedId}).then(function(car) {
+      const imagearr = car.images[0].slice(1,-1).split(",")
+      const tbOutput = car.Turbo ? car.output + "T" : car.output
       res.render("adminCar", {
         title: (car.brand + " " + car.version + " " + car.year), //
         content: ("price:" + car.price),
-        img: car.imgurl
+        img: car.imgurl,
+        images: imagearr,
+        seats: ("Seats: " + car.seats),
+        output: ("Output is: " + tbOutput),
+        polling: ("Polling Radar: " + car.polling),
       });
       // res.redirect("/posts/" + requestedTitle);
   }).catch(function(err) {
@@ -288,11 +303,17 @@ app.get("/cars/:userId/:postId", function(req, res){
   User.findOne({_id: requestedUserId})
   .then(function(user) {
     Car.findOne({_id: requestedCarId}).then(function(car) {
+      const imagearr = car.images[0].slice(1,-1).split(",")
+      const tbOutput = car.Turbo ? car.output + "T" : car.output
       res.render("secretCar", {
         email: user.username,
         title: (car.brand + " " + car.version + " " + car.year), //
         content: ("price:" + car.price),
         img: car.imgurl,
+        images: imagearr,
+        seats: ("Seats: " + car.seats),
+        output: ("Output is: " + tbOutput),
+        polling: ("Polling Radar: " + car.polling),
         mainpgId: requestedUserId,
         carId: requestedCarId
       });

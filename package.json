@@ -10,6 +10,7 @@
     "express-session": "^1.17.3",
     "mongoose": "^7.1.0",
     "mongoose-findorcreate": "^4.0.0",
+    "openai": "^3.3.0",
     "openai-node": "^1.0.5",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
