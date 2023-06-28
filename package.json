@@ -21,7 +21,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start":"node app.js"
+    "start":"node app.js",
+    "build": "node app.js"
   },
   "eslintConfig": {
     "extends": [
