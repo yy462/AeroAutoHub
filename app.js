@@ -16,7 +16,8 @@ const axios = require("axios");
 const homeStartingContent = "A user-friendly platform for buying and selling pre-owned vehicles, connecting customers with a diverse range of quality second-hand cars from AeroAuto.Join AeroAuto today and let us be your trusted partner in finding the perfect pre-owned vehicle. We lookforward to serving you!";
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
-const url = "mongodb+srv://" + process.env.USER_NAME + ":" + process.env.USER_PASS + "@cluster0.ruqhhsi.mongodb.net/carDB";
+// const url = "mongodb+srv://" + process.env.USER_NAME + ":" + process.env.USER_PASS + "@cluster0.ruqhhsi.mongodb.net/carDB";
+const url = process.env.DATABASE_URL;
 // mongoose.connect("mongodb://127.0.0.1:27017/carDB", {useNewUrlParser: true})//local data connect
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
