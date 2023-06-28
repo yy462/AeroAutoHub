@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start":"node app.js",
-    "build": "node app.js"
+    "build": "echo 'No build step'"
   },
   "eslintConfig": {
     "extends": [
