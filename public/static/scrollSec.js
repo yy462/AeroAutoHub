@@ -34,7 +34,7 @@ function createCarCard(car) {
             </p>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary border-2" onclick="location.href='/cars/${car._id}'">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary border-2" onclick="location.href='/cars/${user._id}/${car._id}'">View</button>
             </div>
         </div>
     </div>`;
