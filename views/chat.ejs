@@ -10,8 +10,7 @@
         }
 
         #chatContainer {
-            width: 100%;
-            max-width: 400px;
+            width: 400px;
             border: 1px solid #ccc;
             background-color: #f0f0f0;
             position: fixed;
@@ -61,6 +60,11 @@
 
         #chatForm button:hover {
             background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            #chatContainer {
+                width: 275px;
+            }
         }
     </style>
 </head>

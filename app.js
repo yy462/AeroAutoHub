@@ -586,12 +586,29 @@ app.post("/chat", async (req, res) => {
   // const test = [
   //   {
   //     role: "user",
-  //     content: "美国的劳动节为什么不是五一",
+  //     content: "Hello",
   //   },  
   // ];
+  // try {
+  //   const response = await axios.post("http://127.0.0.1:5000/chat", { messages: test });
+  //   res.json({ response: response.data.response });
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ error: "An error occurred" });
+  // }
+
   try {
-    const response = await axios.post("http://127.0.0.1:5000/chat", { messages: test });
+    console.log("Sending request to Azure Function with data:", test);
     res.json({ response: response.data.response });
+    axios.post("https://mygptfunction.azurewebsites.net/api/MyGPTFunction", test, {
+        headers: {
+            'OPENAI_KEY': process.env.OPENAI_KEY
+        }
+    }).then(response => {
+        console.log("Received response from Azure Function:", response.data);
+    }).catch(error => {
+        console.error("Error sending request to Azure Function:", error);
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred" });

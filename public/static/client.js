@@ -34,16 +34,22 @@ function addMessageToChatArea(role, content) {
 
 async function getChatGPTResponse() {
     try {
-      console.log("messages before send is: ", messages);
-      const response = await axios.post("/chat", { messages });
+      console.log("messages before send are: ", messages);
+      const response = await axios.post('https://mygptfunction.azurewebsites.net/api/MyGPTFunction', { messages }, {
+        headers: {
+            'x-functions-key': process.env.OPENAI_KEY
+        }
+      });
+      console.log("response is: ", response)
+      // console.log("response data is: ", response.data)
       const jsonResponse = response.data;
-      console.log("ChatGPT response:", jsonResponse.response);
+      console.log("ChatGPT response is:", jsonResponse);
       messages.push({
         "role": "assistant",
-        "content": jsonResponse.response,
+        "content": jsonResponse,
       });
       // addMessageToChatArea("ChatGPT", jsonResponse.response);
-      addMessageToChatArea("ChatGPT", jsonResponse.response);
+      addMessageToChatArea("ChatGPT", jsonResponse);
     } catch (error) {
       console.error("Error fetching ChatGPT response:", error);
     }
