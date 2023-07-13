@@ -442,6 +442,13 @@ class Compressor extends TreeWalker {
         if (opt === node) set_flag(opt, SQUEEZED);
         return opt;
     }
+
+    /** Alternative to plain is_lhs() which doesn't work within .optimize() */
+    is_lhs() {
+        const self = this.stack[this.stack.length - 1];
+        const parent = this.stack[this.stack.length - 2];
+        return is_lhs(self, parent);
+    }
 }
 
 function def_optimize(node, optimizer) {
@@ -648,8 +655,6 @@ def_optimize(AST_Lambda, opt_AST_Lambda);
 AST_Scope.DEFMETHOD("hoist_declarations", function(compressor) {
     var self = this;
     if (compressor.has_directive("use asm")) return self;
-    // Hoisting makes no sense in an arrow func
-    if (!Array.isArray(self.body)) return self;
 
     var hoist_funs = compressor.option("hoist_funs");
     var hoist_vars = compressor.option("hoist_vars");
@@ -1543,26 +1548,6 @@ def_optimize(AST_Try, function(self, compressor) {
         }).optimize(compressor);
     }
     return self;
-});
-
-AST_Definitions.DEFMETHOD("remove_initializers", function() {
-    var decls = [];
-    this.definitions.forEach(function(def) {
-        if (def.name instanceof AST_SymbolDeclaration) {
-            def.value = null;
-            decls.push(def);
-        } else {
-            walk(def.name, node => {
-                if (node instanceof AST_SymbolDeclaration) {
-                    decls.push(make_node(AST_VarDef, def, {
-                        name: node,
-                        value: null
-                    }));
-                }
-            });
-        }
-    });
-    this.definitions = decls;
 });
 
 AST_Definitions.DEFMETHOD("to_assignments", function(compressor) {
@@ -2619,8 +2604,7 @@ def_optimize(AST_SymbolRef, function(self, compressor) {
         }
     }
 
-    const parent = compressor.parent();
-    if (compressor.option("reduce_vars") && is_lhs(self, parent) !== self) {
+    if (compressor.option("reduce_vars") && !compressor.is_lhs()) {
         return inline_into_symbolref(self, compressor);
     } else {
         return self;
@@ -2644,7 +2628,7 @@ def_optimize(AST_Undefined, function(self, compressor) {
             return ref;
         }
     }
-    var lhs = is_lhs(compressor.self(), compressor.parent());
+    var lhs = compressor.is_lhs();
     if (lhs && is_atomic(lhs, self)) return self;
     return make_node(AST_UnaryPrefix, self, {
         operator: "void",
@@ -2655,7 +2639,7 @@ def_optimize(AST_Undefined, function(self, compressor) {
 });
 
 def_optimize(AST_Infinity, function(self, compressor) {
-    var lhs = is_lhs(compressor.self(), compressor.parent());
+    var lhs = compressor.is_lhs();
     if (lhs && is_atomic(lhs, self)) return self;
     if (
         compressor.option("keep_infinity")
@@ -2676,7 +2660,7 @@ def_optimize(AST_Infinity, function(self, compressor) {
 });
 
 def_optimize(AST_NaN, function(self, compressor) {
-    var lhs = is_lhs(compressor.self(), compressor.parent());
+    var lhs = compressor.is_lhs();
     if (lhs && !is_atomic(lhs, self)
         || find_variable(compressor, "NaN")) {
         return make_node(AST_Binary, self, {
@@ -2782,13 +2766,20 @@ def_optimize(AST_DefaultAssign, function(self, compressor) {
 
     // `[x = undefined] = foo` ---> `[x] = foo`
     // `(arg = undefined) => ...` ---> `(arg) => ...` (unless `keep_fargs`)
-    if (
-        evaluateRight === undefined &&
-        (compressor.parent() instanceof AST_Lambda
-            ? compressor.option("keep_fargs") === false
-            : true)
-    ) {
-        self = self.left;
+    // `((arg = undefined) => ...)()` ---> `((arg) => ...)()`
+    let lambda, iife;
+    if (evaluateRight === undefined) {
+        if (
+            (lambda = compressor.parent()) instanceof AST_Lambda
+                ? (
+                    compressor.option("keep_fargs") === false
+                    || (iife = compressor.parent(1)).TYPE === "Call"
+                        && iife.expression === lambda
+                )
+                : true
+        ) {
+            self = self.left;
+        }
     } else if (evaluateRight !== self.right) {
         evaluateRight = make_node_from_constant(evaluateRight, self.right);
         self.right = best_of_expression(evaluateRight, self.right);
@@ -3245,7 +3236,10 @@ def_optimize(AST_Sub, function(self, compressor) {
                     }
                 }
             }
-            prop = self.property = best_of_expression(prop, make_node_from_constant(key, prop).transform(compressor));
+            prop = self.property = best_of_expression(
+                prop,
+                make_node_from_constant(key, prop).transform(compressor)
+            );
             var property = "" + key;
             if (is_basic_identifier_string(property)
                 && property.length <= prop.size() + 1) {
@@ -3303,7 +3297,7 @@ def_optimize(AST_Sub, function(self, compressor) {
             return sym;
         }
     }
-    if (is_lhs(self, compressor.parent())) return self;
+    if (compressor.is_lhs()) return self;
     if (key !== prop) {
         var sub = self.flatten_object(property, compressor);
         if (sub) {
@@ -3371,22 +3365,9 @@ def_optimize(AST_Chain, function (self, compressor) {
     return self;
 });
 
-AST_Lambda.DEFMETHOD("contains_this", function() {
-    return walk(this, node => {
-        if (node instanceof AST_This) return walk_abort;
-        if (
-            node !== this
-            && node instanceof AST_Scope
-            && !(node instanceof AST_Arrow)
-        ) {
-            return true;
-        }
-    });
-});
-
 def_optimize(AST_Dot, function(self, compressor) {
     const parent = compressor.parent();
-    if (is_lhs(self, parent)) return self;
+    if (compressor.is_lhs()) return self;
     if (compressor.option("unsafe_proto")
         && self.expression instanceof AST_Dot
         && self.expression.property == "prototype") {
